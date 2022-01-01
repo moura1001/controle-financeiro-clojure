@@ -1,14 +1,22 @@
 (ns controle-financeiro.handler-test
-  (:require [clojure.test :refer :all]
+  (:require [midje.sweet :refer :all]
             [ring.mock.request :as mock]
             [controle-financeiro.handler :refer :all]))
 
-(deftest test-app
-  (testing "main route"
-    (let [response (app (mock/request :get "/"))]
-      (is (= (:status response) 200))
-      (is (= (:body response) "Hello World"))))
+(facts "'Hello World' na rota raiz"
+  (let [response (app (mock/request :get "/"))]
+    (fact "O status da resposta é 200"
+      (:status response) => 200)
+    (fact "O texto do corpo é 'Hello World'"
+      (:body response) => "Hello World")
+  )
+)
 
-  (testing "not-found route"
-    (let [response (app (mock/request :get "/invalid"))]
-      (is (= (:status response) 404)))))
+(facts "Rota inválida não existe"
+  (let [response (app (mock/request :get "/invalid"))]
+    (fact "O código de erro é 400"
+      (:status response) => 404)
+    (fact "O texto do corpo é 'Not Found'"
+      (:body response) => "Not Found")
+  )
+)
