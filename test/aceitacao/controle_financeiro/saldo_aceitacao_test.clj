@@ -18,10 +18,27 @@
   (.stop @servidor)
 )
 
-(fact "O saldo inicial é 0" :aceitacao
-  (iniciar-servidor 3001)
-  (:body (http/get "http://localhost:3001/saldo")) => "0"
-  (parar-servidor)
+(def porta-padrao 3001)
+
+(defn endereco-para [rota]
+  (str "http://localhost:" porta-padrao rota)
+)
+
+(def requisicao-para (comp http/get endereco-para))
+
+(defn conteudo [rota]
+  (:body (requisicao-para rota))
+)
+
+(against-background
+  [
+    (before :facts (iniciar-servidor porta-padrao))
+    (after :facts (parar-servidor))
+  ]
+  
+  (fact "O saldo inicial é 0" :aceitacao
+    (conteudo "/saldo") => "0"
+  )
 )
 
 (facts "Saldo inicial deve ser 0"
