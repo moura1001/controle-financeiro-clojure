@@ -18,7 +18,7 @@
   (.stop @servidor)
 )
 
-(fact "O saldo inicial é 0"
+(fact "O saldo inicial é 0" :aceitacao
   (iniciar-servidor 3001)
   (:body (http/get "http://localhost:3001/saldo")) => "0"
   (parar-servidor)
