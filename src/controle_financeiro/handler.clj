@@ -6,7 +6,12 @@
 
 (defroutes app-routes
   (GET "/" [] "Hello World")
-  (GET "/saldo" [] (json/generate-string {:saldo 0}))
+  (GET "/saldo" []
+    {
+      :headers {"Content-Type" "application/json; charset=utf-8"}
+      :body (json/generate-string {:saldo 0})
+    }
+  )
   (route/not-found "Not Found"))
 
 (def app

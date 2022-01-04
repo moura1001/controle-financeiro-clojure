@@ -9,6 +9,10 @@
     (json/generate-string {:saldo 0}) => "{\"saldo\":0}"
   )
   (let [response (app (mock/request :get "/saldo"))]
+    (fact "O formato é 'application/json'"
+      (get-in response [:headers "Content-Type"])
+      => "application/json; charset=utf-8")
+    
     (fact "O status da resposta é 200"
       (:status response) => 200)
       
