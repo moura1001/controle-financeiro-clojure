@@ -4,14 +4,16 @@
             [ring.middleware.defaults :refer [wrap-defaults site-defaults]]
             [cheshire.core :as json]))
 
+(defn saldo-como-json []
+  {
+    :headers {"Content-Type" "application/json; charset=utf-8"}
+    :body (json/generate-string {:saldo 0})
+  }
+)
+
 (defroutes app-routes
   (GET "/" [] "Hello World")
-  (GET "/saldo" []
-    {
-      :headers {"Content-Type" "application/json; charset=utf-8"}
-      :body (json/generate-string {:saldo 0})
-    }
-  )
+  (GET "/saldo" [] (saldo-como-json))
   (route/not-found "Not Found"))
 
 (def app
