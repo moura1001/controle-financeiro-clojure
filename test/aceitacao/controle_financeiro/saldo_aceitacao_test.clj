@@ -10,6 +10,8 @@
   ]
   
   (fact "O saldo inicial é 0" :aceitacao
-    (conteudo "/saldo") => "0"
+    (parse-string-producing-keywords-as-keys
+      (conteudo "/saldo")
+    ) => {:saldo 0}
   )
 )

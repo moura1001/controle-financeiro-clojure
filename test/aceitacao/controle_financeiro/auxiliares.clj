@@ -1,7 +1,8 @@
 (ns controle-financeiro.auxiliares
   (:require [controle-financeiro.handler :refer [app]]
             [ring.adapter.jetty :refer [run-jetty]]
-            [clj-http.client :as http]))
+            [clj-http.client :as http]
+            [cheshire.core :as json]))
 
 (def servidor (atom nil))
 
@@ -26,4 +27,8 @@
   
 (defn conteudo [rota]
   (:body (requisicao-para rota))
+)
+
+(defn parse-string-producing-keywords-as-keys [string]
+  (json/parse-string string true)
 )
