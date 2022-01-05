@@ -14,6 +14,7 @@
 (defroutes app-routes
   (GET "/" [] "Hello World")
   (GET "/saldo" [] (saldo-como-json))
+  (POST "/transacoes" [] {})
   (route/not-found "Not Found"))
 
 (def app
