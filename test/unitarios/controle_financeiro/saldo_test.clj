@@ -6,7 +6,10 @@
   
 (facts "Saldo inicial deve ser 0"
   (against-background
-    (json/generate-string {:saldo 0}) => "{\"saldo\":0}"
+    [
+      (json/generate-string {:saldo 0}) => "{\"saldo\":0}"
+      (db/saldo) => 0
+    ]
   )
   (let [response (app (mock/request :get "/saldo"))]
     (fact "O formato é 'application/json'"

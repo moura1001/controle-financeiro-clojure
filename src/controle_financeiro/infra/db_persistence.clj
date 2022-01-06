@@ -15,4 +15,6 @@
     (merge transacao {:id (count colecao-atualizada)})
   )
 )
+
+(declare saldo)
   
