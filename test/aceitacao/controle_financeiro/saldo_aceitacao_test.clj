@@ -3,11 +3,17 @@
             [ring.mock.request :as mock]
             [controle-financeiro.auxiliares :refer :all]
             [cheshire.core :as json]
-            [clj-http.client :as http]))
+            [clj-http.client :as http]
+            [controle-financeiro.infra.db-persistence :as db]))
 
 (against-background
   [
-    (before :facts (iniciar-servidor porta-padrao))
+    (before :facts
+      [
+        (iniciar-servidor porta-padrao)
+        (db/limpar-colecao)
+      ]
+    )
     (after :facts (parar-servidor))
   ]
   
