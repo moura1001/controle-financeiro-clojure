@@ -3,6 +3,12 @@
             [controle-financeiro.infra.db-persistence :refer :all]))
   
 (facts "Guarda uma transação num átomo"
+  (against-background
+    [
+      (before :facts (limpar-colecao))
+    ]
+  )
+  
   (fact "A coleção de transações começa vazia"
     (count (transacoes)) => 0
   )
