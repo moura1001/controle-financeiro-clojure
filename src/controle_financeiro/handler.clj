@@ -6,17 +6,21 @@
             [controle-financeiro.infra.db-persistence :as db]
             [ring.middleware.json :refer [wrap-json-body]]))
 
-(defn saldo-como-json []
+(defn como-json [conteudo]
   {
     :headers {"Content-Type" "application/json; charset=utf-8"}
-    :body (json/generate-string {:saldo 0})
+    :body (json/generate-string conteudo)
   }
 )
 
 (defroutes app-routes
   (GET "/" [] "Hello World")
-  (GET "/saldo" [] (saldo-como-json))
-  (POST "/transacoes" requisicao (db/registrar (:body requisicao)))
+  (GET "/saldo" [] (como-json {:saldo 0}))
+  (POST "/transacoes" requisicao
+    (-> (db/registrar (:body requisicao))
+      (como-json)
+    )
+  )
   (route/not-found "Not Found"))
 
 (def app
