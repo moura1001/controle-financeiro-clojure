@@ -2,7 +2,8 @@
   (:require [controle-financeiro.handler :refer [app]]
             [midje.sweet :refer :all]
             [ring.mock.request :as mock]
-            [cheshire.core :as json]))
+            [cheshire.core :as json]
+            [controle-financeiro.infra.db-persistence :as db]))
   
 (facts "Saldo inicial deve ser 0"
   (against-background
