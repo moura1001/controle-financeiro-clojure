@@ -21,7 +21,10 @@
     :aceitacao
     (http/post
       (endereco-para "/transacoes")
-      {:body (json/generate-string {:valor 10 :tipo "receita"})}
+      {
+        :content-type :json
+        :body (json/generate-string {:valor 10 :tipo "receita"})
+      }
     )
     
     (parse-string-producing-keywords-as-keys
