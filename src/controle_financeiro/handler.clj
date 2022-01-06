@@ -2,7 +2,8 @@
   (:require [compojure.core :refer :all]
             [compojure.route :as route]
             [ring.middleware.defaults :refer [wrap-defaults api-defaults]]
-            [cheshire.core :as json]))
+            [cheshire.core :as json]
+            [controle-financeiro.infra.db-persistence :as db]))
 
 (defn saldo-como-json []
   {
@@ -14,7 +15,7 @@
 (defroutes app-routes
   (GET "/" [] "Hello World")
   (GET "/saldo" [] (saldo-como-json))
-  (POST "/transacoes" [] {})
+  (POST "/transacoes" requisicao (db/registrar (:body requisicao)))
   (route/not-found "Not Found"))
 
 (def app

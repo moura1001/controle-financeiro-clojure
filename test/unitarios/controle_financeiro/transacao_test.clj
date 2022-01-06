@@ -1,8 +1,9 @@
-(ns controle-financeiro.saldo-test
+(ns controle-financeiro.transacao-test
   (:require [controle-financeiro.handler :refer [app]]
             [midje.sweet :refer :all]
             [ring.mock.request :as mock]
-            [cheshire.core :as json]))
+            [cheshire.core :as json]
+            [controle-financeiro.infra.db-persistence :as db]))
   
 (facts "Registra uma receita no valor de 10"
   (against-background
