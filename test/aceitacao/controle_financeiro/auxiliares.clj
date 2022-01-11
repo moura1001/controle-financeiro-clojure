@@ -32,3 +32,19 @@
 (defn parse-string-producing-keywords-as-keys [string]
   (json/parse-string string true)
 )
+
+(defn conteudo-como-json [transacao]
+  {
+    :content-type :json
+    :body (json/generate-string transacao)
+    :throw-exceptions false
+  }
+)
+
+(defn despesa [valor]
+  (conteudo-como-json {:valor valor :tipo "despesa"})
+)
+
+(defn receita [valor]
+  (conteudo-como-json {:valor valor :tipo "receita"})
+)

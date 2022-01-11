@@ -25,13 +25,7 @@
   
   (fact "O saldo é 10 quando a única transação é uma receita de 10"
     :aceitacao
-    (http/post
-      (endereco-para "/transacoes")
-      {
-        :content-type :json
-        :body (json/generate-string {:valor 10 :tipo "receita"})
-      }
-    )
+    (http/post (endereco-para "/transacoes") (receita 10))
     
     (parse-string-producing-keywords-as-keys
       (conteudo "/saldo")
@@ -40,29 +34,11 @@
   
   (fact "O saldo é 1000 quando criamos duas receitas de 2000 e uma despesa de 3000"
     :aceitacao
-    (http/post
-      (endereco-para "/transacoes")
-      {
-        :content-type :json
-        :body (json/generate-string {:valor 2000 :tipo "receita"})
-      }
-    )
+    (http/post (endereco-para "/transacoes") (receita 2000))
     
-    (http/post
-      (endereco-para "/transacoes")
-      {
-        :content-type :json
-        :body (json/generate-string {:valor 2000 :tipo "receita"})
-      }
-    )
+    (http/post (endereco-para "/transacoes") (receita 2000))
 
-    (http/post
-      (endereco-para "/transacoes")
-      {
-        :content-type :json
-        :body (json/generate-string {:valor 3000 :tipo "despesa"})
-      }
-    )
+    (http/post (endereco-para "/transacoes") (despesa 3000))
     
     (parse-string-producing-keywords-as-keys
       (conteudo "/saldo")
