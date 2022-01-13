@@ -27,6 +27,15 @@
       (como-json {:mensagem "Requisição inválida"} 422)
     )
   )
+  (GET "/transacoes" []
+    (como-json {:transacoes (db/transacoes)})
+  )
+  (GET "/despesas" []
+    (como-json {:transacoes (db/transacoes-do-tipo "despesa")})
+  )
+  (GET "/receitas" []
+    (como-json {:transacoes (db/transacoes-do-tipo "receita")})
+  )
   (route/not-found "Not Found"))
 
 (def app
