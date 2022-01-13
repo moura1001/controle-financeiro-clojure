@@ -34,5 +34,10 @@
   (reduce calcular 0 @registros)
 )
 
-(declare transacoes-do-tipo)
+(defn transacoes-do-tipo [tipo]
+  (filter
+    #(= tipo (:tipo %))
+    (transacoes)
+  )
+)
   
