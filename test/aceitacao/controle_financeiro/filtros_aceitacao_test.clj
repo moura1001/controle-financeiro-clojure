@@ -4,6 +4,15 @@
             [controle-financeiro.auxiliares :refer :all]
             [controle-financeiro.infra.db-persistence :as db]))
 
+(def transacoes-aleatorias
+  '(
+    {:valor 33.0M :tipo "despesa"}
+    {:valor 2700.0M :tipo "receita"}
+    {:valor 29.0M :tipo "despesa"}
+    {:valor 88.0M :tipo "despesa"}
+  )
+)
+
 (against-background
   [
     (before :facts
@@ -31,5 +40,46 @@
     (parse-string-producing-keywords-as-keys
       (conteudo "/transacoes")
     ) => {:transacoes '()}
+  )
+)
+
+(against-background
+  [
+    (before :facts
+      (doseq [transacao transacoes-aleatorias]
+        (db/registrar transacao)
+      )
+    )
+    (after :facts (db/limpar-colecao))
+  ]
+  
+  (fact "Existem 3 despesas" :aceitacao
+    (count
+      (:transacoes
+        (parse-string-producing-keywords-as-keys
+          (conteudo "/despesas")
+        )
+      )
+    ) => 3
+  )
+  
+  (fact "Existe 1 receita" :aceitacao
+    (count
+      (:transacoes
+        (parse-string-producing-keywords-as-keys
+          (conteudo "/receitas")
+        )
+      )
+    ) => 1
+  )
+  
+  (fact "Existem 4 transações" :aceitacao
+    (count
+      (:transacoes
+        (parse-string-producing-keywords-as-keys
+          (conteudo "/transacoes")
+        )
+      )
+    ) => 4
   )
 )
