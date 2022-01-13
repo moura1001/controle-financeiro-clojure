@@ -52,4 +52,46 @@
     (saldo) => 135
   )
 )
+
+(facts "Filtra transações por tipo"
+  (def transacoes-aleatorias
+    '(
+      {:valor 8 :tipo "despesa"}
+      {:valor 16 :tipo "receita"}
+      {:valor 32 :tipo "despesa"}
+      {:valor 64 :tipo "receita"}
+    )
+  )
+  
+  (against-background
+    [
+      (before :facts
+        [
+          (limpar-colecao)
+          (doseq [transacao transacoes-aleatorias]
+            (registrar transacao)
+          )
+        ]
+      )
+    ]
+    
+    (fact "Encontra apenas as receitas"
+      (transacoes-do-tipo "receita")
+        =>
+        '(
+          {:valor 16 :tipo "receita"}
+          {:valor 64 :tipo "receita"}
+        )
+    )
+    
+    (fact "Encontra apenas as despesas"
+      (transacoes-do-tipo "despesa")
+        =>
+        '(
+          {:valor 8 :tipo "despesa"}
+          {:valor 32 :tipo "despesa"}
+        )
+    )
+  )
+)
   
