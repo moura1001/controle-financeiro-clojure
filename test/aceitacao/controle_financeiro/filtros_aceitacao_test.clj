@@ -41,45 +41,45 @@
       (conteudo "/transacoes")
     ) => {:transacoes '()}
   )
-)
-
-(against-background
-  [
-    (before :facts
-      (doseq [transacao transacoes-aleatorias]
-        (db/registrar transacao)
+  
+  (against-background
+    [
+      (before :facts
+        (doseq [transacao transacoes-aleatorias]
+          (db/registrar transacao)
+        )
       )
+      (after :facts (db/limpar-colecao))
+    ]
+    
+    (fact "Existem 3 despesas" :aceitacao
+      (count
+        (:transacoes
+          (parse-string-producing-keywords-as-keys
+            (conteudo "/despesas")
+          )
+        )
+      ) => 3
     )
-    (after :facts (db/limpar-colecao))
-  ]
-  
-  (fact "Existem 3 despesas" :aceitacao
-    (count
-      (:transacoes
-        (parse-string-producing-keywords-as-keys
-          (conteudo "/despesas")
+    
+    (fact "Existe 1 receita" :aceitacao
+      (count
+        (:transacoes
+          (parse-string-producing-keywords-as-keys
+            (conteudo "/receitas")
+          )
         )
-      )
-    ) => 3
-  )
-  
-  (fact "Existe 1 receita" :aceitacao
-    (count
-      (:transacoes
-        (parse-string-producing-keywords-as-keys
-          (conteudo "/receitas")
+      ) => 1
+    )
+    
+    (fact "Existem 4 transações" :aceitacao
+      (count
+        (:transacoes
+          (parse-string-producing-keywords-as-keys
+            (conteudo "/transacoes")
+          )
         )
-      )
-    ) => 1
-  )
-  
-  (fact "Existem 4 transações" :aceitacao
-    (count
-      (:transacoes
-        (parse-string-producing-keywords-as-keys
-          (conteudo "/transacoes")
-        )
-      )
-    ) => 4
+      ) => 4
+    )
   )
 )
