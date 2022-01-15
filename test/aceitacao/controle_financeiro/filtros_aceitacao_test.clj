@@ -6,10 +6,10 @@
 
 (def transacoes-aleatorias
   '(
-    {:valor 33.0M :tipo "despesa"}
-    {:valor 2700.0M :tipo "receita"}
-    {:valor 29.0M :tipo "despesa"}
-    {:valor 88.0M :tipo "despesa"}
+    {:valor 33.0M :tipo "despesa" :rotulos ["livro" "educação"]}
+    {:valor 2700.0M :tipo "receita" :rotulos ["salário"]}
+    {:valor 29.0M :tipo "despesa" :rotulos ["jogo" "entretenimento"]}
+    {:valor 88.0M :tipo "despesa" :rotulos ["curso" "educação"]}
   )
 )
 
@@ -80,6 +80,38 @@
           )
         )
       ) => 4
+    )
+    
+    (fact "Existe 1 receita com rótulo 'salário'" :aceitacao
+      (count
+        (:transacoes
+          (parse-string-producing-keywords-as-keys
+            (conteudo "/transacoes?rotulos=salário")
+          )
+        )
+      ) => 1
+    )
+    
+    (fact "Existem 2 despesas com rótulo 'livro' ou 'curso'"
+      :aceitacao
+      (count
+        (:transacoes
+          (parse-string-producing-keywords-as-keys
+            (conteudo "/transacoes?rotulos=livro&rotulos=curso")
+          )
+        )
+      ) => 2
+    )
+    
+    (fact "Existem 2 despesas com rótulo 'educação'"
+      :aceitacao
+      (count
+        (:transacoes
+          (parse-string-producing-keywords-as-keys
+            (conteudo "/transacoes?rotulos=educação")
+          )
+        )
+      ) => 2
     )
   )
 )
