@@ -17,8 +17,12 @@
   {:id 3 :valor 2700.0M :tipo "receita" :rotulos ["salário"]}
 )
 
+(def transacao-sem-rotulo
+  {:id 4 :valor 150.0M :tipo "receita"}
+)
+
 (def transacoes-aleatorias
-  [livro curso salario]
+  [livro curso salario transacao-sem-rotulo]
 )
 
 (facts "Filtra transações por parâmetros de busca na URL"
@@ -75,6 +79,25 @@
         (json/generate-string
           {
             :transacoes [salario]
+          }
+        )
+      )
+    )
+    
+    (fact "Filtro sem nenhum valor"
+      (let
+        [
+          response
+          (app
+            (mock/request :get "/transacoes?rotulos=")
+          )
+        ]
+        (:status response) => 200
+        
+        (:body response) =>
+        (json/generate-string
+          {
+            :transacoes [transacao-sem-rotulo]
           }
         )
       )

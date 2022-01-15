@@ -102,6 +102,7 @@
       {:valor 3000.0M :tipo "receita" :rotulos ["salário"]}
       {:valor 29.0M :tipo "despesa" :rotulos ["jogo" "entretenimento"]}
       {:valor 88.0M :tipo "despesa" :rotulos ["curso" "educação"]}
+      {:valor 150.0M :tipo "receita"}
     )
   )
   
@@ -142,6 +143,14 @@
         '(
           {:valor 33.0M :tipo "despesa" :rotulos ["livro" "educação"]}
           {:valor 88.0M :tipo "despesa" :rotulos ["curso" "educação"]}
+        )
+    )
+    
+    (fact "Encontra a transação sem rótulo"
+      (transacoes-com-filtro {:rotulos ""})
+        =>
+        '(
+          {:valor 150.0M :tipo "receita"}
         )
     )
   )
