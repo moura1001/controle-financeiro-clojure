@@ -41,5 +41,22 @@
   )
 )
 
-(declare transacoes-com-filtro)
+(defn transacoes-com-filtro [filtros]
+  (let
+    [
+      rotulos
+      (->>
+        (:rotulos filtros)
+        (conj [])
+        (flatten)
+        (set)
+      )
+    ]
+    
+    (filter
+      #(some rotulos (:rotulos %))
+      (transacoes)
+    )
+  )
+)
   
