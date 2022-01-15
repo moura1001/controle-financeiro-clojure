@@ -43,6 +43,9 @@
       (db/transacoes-com-filtro {:rotulos "salário"})
         => [salario]
 
+      (db/transacoes-com-filtro {:rotulos ""})
+        => [transacao-sem-rotulo]
+
       (after :facts (db/limpar-colecao))
     ]
 
