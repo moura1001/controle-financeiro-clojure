@@ -1,4 +1,5 @@
-(ns controle-financeiro.infra.db-persistence)
+(ns controle-financeiro.infra.db-persistence
+  (:require [clojure.string :refer [blank?]]))
   
 (def registros (atom []))
 
@@ -41,6 +42,14 @@
   )
 )
 
+(defn- sem-rotulo [transacao]
+  (or
+    (not (contains? transacao :rotulos))
+    (empty? (:rotulos transacao))
+    (every? blank? (:rotulos transacao))
+  )
+)
+
 (defn transacoes-com-filtro [filtros]
   (let
     [
@@ -53,9 +62,17 @@
       )
     ]
     
-    (filter
-      #(some rotulos (:rotulos %))
-      (transacoes)
+    (if-not (every? blank? rotulos)
+      
+      (filter
+        #(some rotulos (:rotulos %))
+        (transacoes)
+      )
+      
+      (filter
+        sem-rotulo
+        (transacoes)
+      )
     )
   )
 )
