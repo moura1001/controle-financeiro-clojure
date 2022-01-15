@@ -40,4 +40,6 @@
     (transacoes)
   )
 )
+
+(declare transacoes-com-filtro)
   
