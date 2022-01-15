@@ -10,6 +10,7 @@
     {:valor 2700.0M :tipo "receita" :rotulos ["salário"]}
     {:valor 29.0M :tipo "despesa" :rotulos ["jogo" "entretenimento"]}
     {:valor 88.0M :tipo "despesa" :rotulos ["curso" "educação"]}
+    {:valor 200.0M :tipo "receita"}
   )
 )
 
@@ -62,24 +63,24 @@
       ) => 3
     )
     
-    (fact "Existe 1 receita" :aceitacao
+    (fact "Existem 2 receitas" :aceitacao
       (count
         (:transacoes
           (parse-string-producing-keywords-as-keys
             (conteudo "/receitas")
           )
         )
-      ) => 1
+      ) => 2
     )
     
-    (fact "Existem 4 transações" :aceitacao
+    (fact "Existem 5 transações" :aceitacao
       (count
         (:transacoes
           (parse-string-producing-keywords-as-keys
             (conteudo "/transacoes")
           )
         )
-      ) => 4
+      ) => 5
     )
     
     (fact "Existe 1 receita com rótulo 'salário'" :aceitacao
@@ -112,6 +113,17 @@
           )
         )
       ) => 2
+    )
+    
+    (fact "Existe 1 transação sem rótulo"
+      :aceitacao
+      (count
+        (:transacoes
+          (parse-string-producing-keywords-as-keys
+            (conteudo "/transacoes?rotulos=")
+          )
+        )
+      ) => 1
     )
   )
 )
