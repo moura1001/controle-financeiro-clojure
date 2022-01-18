@@ -3,21 +3,21 @@
             [midje.sweet :refer :all]
             [ring.mock.request :as mock]
             [cheshire.core :as json]
-            [controle-financeiro.infra.db-persistence :as db]))
+            [controle-financeiro.infra.db-postgres :as db]))
   
 (facts "Existe uma rota para lidar com filtro de transação por tipo"
   (against-background
     [
       (db/transacoes-do-tipo "receita")
-        => '({:id 1 :valor 2000 :tipo "receita"})
+        => '({:id 1 :valor 2000 :tipo "receita" :rotulos []})
       
       (db/transacoes-do-tipo "despesa")
-        => '({:id 2 :valor 89 :tipo "despesa"})
+        => '({:id 2 :valor 89 :tipo "despesa"  :rotulos []})
 
       (db/transacoes)
         => '(
-            {:id 1 :valor 2000 :tipo "receita"}
-            {:id 2 :valor 89 :tipo "despesa"}
+            {:id 1 :valor 2000 :tipo "receita" :rotulos []}
+            {:id 2 :valor 89 :tipo "despesa" :rotulos []}
           )
     ]
 
@@ -28,7 +28,7 @@
         (:body response) =>
         (json/generate-string
           {
-            :transacoes '({:id 1 :valor 2000 :tipo "receita"})
+            :transacoes '({:id 1 :valor 2000 :tipo "receita" :rotulos []})
           }
         )
       )
@@ -41,7 +41,7 @@
         (:body response) =>
         (json/generate-string
           {
-            :transacoes '({:id 2 :valor 89 :tipo "despesa"})
+            :transacoes '({:id 2 :valor 89 :tipo "despesa" :rotulos []})
           }
         )
       )
@@ -55,8 +55,8 @@
         (json/generate-string
           {
             :transacoes '(
-              {:id 1 :valor 2000 :tipo "receita"}
-              {:id 2 :valor 89 :tipo "despesa"}
+              {:id 1 :valor 2000 :tipo "receita" :rotulos []}
+              {:id 2 :valor 89 :tipo "despesa" :rotulos []}
             )
           }
         )

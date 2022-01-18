@@ -31,7 +31,7 @@
     {
       :transacoes
       (if (empty? filtros)
-        (db/transacoes)
+        (pg/transacoes)
         (db/transacoes-com-filtro filtros)
       )
     }
@@ -39,9 +39,9 @@
 )
 
 (defn get-despesas []
-  (como-json {:transacoes (db/transacoes-do-tipo "despesa")})
+  (como-json {:transacoes (pg/transacoes-do-tipo "despesa")})
 )
 
 (defn get-receitas []
-  (como-json {:transacoes (db/transacoes-do-tipo "receita")})
+  (como-json {:transacoes (pg/transacoes-do-tipo "receita")})
 )
