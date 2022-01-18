@@ -1,0 +1,19 @@
+version: "3"
+
+services:
+  postgresdb-test:
+    build:
+      context: ./database
+      dockerfile: Dockerfile-postgres-test
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - "5432:5432"
+    volumes:
+      - transacoes-postgres-data-test:/var/lib/postgresql/data
+
+volumes:
+  transacoes-postgres-data-test:
+    external: false

@@ -1,7 +1,8 @@
 (ns controle-financeiro.service.transacoes-service
   (:require [cheshire.core :as json]
             [controle-financeiro.infra.db-persistence :as db]
-            [controle-financeiro.domain.transacao :as transacao]))
+            [controle-financeiro.domain.transacao :as transacao]
+            [controle-financeiro.infra.db-postgres :as pg]))
 
 (defn como-json [conteudo & [status]]
   {
@@ -12,12 +13,12 @@
 )
 
 (defn get-saldo []
-  (como-json {:saldo (db/saldo)})
+  (como-json {:saldo (pg/saldo)})
 )
 
 (defn create-transacao [requisicao]
   (if (transacao/eh-valida? (:body requisicao))
-    (-> (db/registrar (:body requisicao))
+    (-> (pg/registrar (:body requisicao))
       (como-json 201)
     )
 
