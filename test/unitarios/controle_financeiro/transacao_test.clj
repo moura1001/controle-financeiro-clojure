@@ -3,13 +3,13 @@
             [midje.sweet :refer :all]
             [ring.mock.request :as mock]
             [cheshire.core :as json]
-            [controle-financeiro.infra.db-persistence :as db]
+            [controle-financeiro.infra.db-postgres :as db]
             [controle-financeiro.domain.transacao :refer :all]))
   
 (facts "Registra uma receita no valor de 10"
   (against-background
     (db/registrar {:valor 10 :tipo "receita"})
-    => {:id 1 :valor 10 :tipo "receita"}
+    => {:id 1 :valor 10 :tipo "receita" :rotulos []}
   )
   (let [response
     (app
@@ -23,7 +23,7 @@
       (:status response) => 201)
       
     (fact "O texto do corpo é um JSON com o conteúdo enviado e um id"
-      (:body response) => "{\"id\":1,\"valor\":10,\"tipo\":\"receita\"}")
+      (:body response) => "{\"id\":1,\"valor\":10,\"tipo\":\"receita\",\"rotulos\":[]}")
   )
 )
 

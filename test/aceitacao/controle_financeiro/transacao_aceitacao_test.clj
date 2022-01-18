@@ -2,14 +2,14 @@
   (:require [midje.sweet :refer :all]
             [controle-financeiro.auxiliares :refer :all]
             [clj-http.client :as http]
-            [controle-financeiro.infra.db-persistence :as db]))
+            [controle-financeiro.infra.db-postgres :as db]))
 
 (against-background
   [
     (before :facts
       [
         (iniciar-servidor porta-padrao)
-        (db/limpar-colecao)
+        (db/limpar-base)
       ]
     )
     (after :facts (parar-servidor))
