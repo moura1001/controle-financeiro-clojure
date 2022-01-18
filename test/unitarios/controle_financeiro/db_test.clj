@@ -1,55 +1,56 @@
 (ns controle-financeiro.db-test
   (:require [midje.sweet :refer :all]
-            [controle-financeiro.infra.db-persistence :refer :all]))
+            [controle-financeiro.infra.db-persistence :refer :all]
+            [controle-financeiro.infra.db-postgres :as pg]))
   
-(facts "Guarda uma transação num átomo"
+(facts "Guarda uma transação na base de dados"
   (against-background
     [
-      (before :facts (limpar-colecao))
+      (before :facts (pg/limpar-base))
     ]
   )
   
   (fact "A coleção de transações começa vazia"
-    (count (transacoes)) => 0
+    (count (pg/transacoes)) => 0
   )
   
   (fact "A transação é o primeiro registro"
-    (registrar {:valor 7 :tipo "receita"})
-    => {:id 1 :valor 7 :tipo "receita"}
+    (pg/registrar {:valor 7 :tipo "receita"})
+    => {:id 1 :valor 7M :tipo "receita" :rotulos []}
     
-    (count (transacoes)) => 1
+    (count (pg/transacoes)) => 1
   )
 )
 
 (facts "Calcula o saldo dada uma coleção de transações"
   (against-background
     [
-      (before :facts (limpar-colecao))
+      (before :facts (pg/limpar-base))
     ]
   )
   
   (fact "Saldo é positivo quando só tem receitas"
-    (registrar {:valor 1 :tipo "receita"})
-    (registrar {:valor 2 :tipo "receita"})
-    (registrar {:valor 4 :tipo "receita"})
-    (registrar {:valor 8 :tipo "receita"})
-    (saldo) => 15
+    (pg/registrar {:valor 1 :tipo "receita"})
+    (pg/registrar {:valor 2 :tipo "receita"})
+    (pg/registrar {:valor 4 :tipo "receita"})
+    (pg/registrar {:valor 8 :tipo "receita"})
+    (pg/saldo) => 15M
   )
   
   (fact "Saldo é negativo quando só tem despesas"
-    (registrar {:valor 16 :tipo "despesa"})
-    (registrar {:valor 32 :tipo "despesa"})
-    (registrar {:valor 64 :tipo "despesa"})
-    (registrar {:valor 128 :tipo "despesa"})
-    (saldo) => -240
+    (pg/registrar {:valor 16 :tipo "despesa"})
+    (pg/registrar {:valor 32 :tipo "despesa"})
+    (pg/registrar {:valor 64 :tipo "despesa"})
+    (pg/registrar {:valor 128 :tipo "despesa"})
+    (pg/saldo) => -240M
   )
   
   (fact "Saldo é a soma das receitas menos a soma das despesas"
-    (registrar {:valor 1 :tipo "despesa"})
-    (registrar {:valor 16 :tipo "receita"})
-    (registrar {:valor 8 :tipo "despesa"})
-    (registrar {:valor 128 :tipo "receita"})
-    (saldo) => 135
+    (pg/registrar {:valor 1 :tipo "despesa"})
+    (pg/registrar {:valor 16 :tipo "receita"})
+    (pg/registrar {:valor 8 :tipo "despesa"})
+    (pg/registrar {:valor 128 :tipo "receita"})
+    (pg/saldo) => 135M
   )
 )
 
