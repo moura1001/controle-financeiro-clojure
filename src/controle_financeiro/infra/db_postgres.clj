@@ -79,7 +79,14 @@
   )
 )
 
-(declare transacoes-do-tipo)
+(defn transacoes-do-tipo [tipo]
+  (sql/query
+    db
+    ["SELECT * FROM transacoes
+      WHERE tipo = ?" tipo
+    ]
+  )
+)
 
 (declare transacoes-com-filtro)
   

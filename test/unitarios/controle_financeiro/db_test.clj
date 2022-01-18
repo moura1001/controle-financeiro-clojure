@@ -68,29 +68,29 @@
     [
       (before :facts
         [
-          (limpar-colecao)
+          (pg/limpar-base)
           (doseq [transacao transacoes-aleatorias]
-            (registrar transacao)
+            (pg/registrar transacao)
           )
         ]
       )
     ]
     
     (fact "Encontra apenas as receitas"
-      (transacoes-do-tipo "receita")
+      (pg/transacoes-do-tipo "receita")
         =>
         '(
-          {:valor 16 :tipo "receita"}
-          {:valor 64 :tipo "receita"}
+          {:id 2 :valor 16M :tipo "receita" :rotulos []}
+          {:id 4 :valor 64M :tipo "receita" :rotulos []}
         )
     )
     
     (fact "Encontra apenas as despesas"
-      (transacoes-do-tipo "despesa")
+      (pg/transacoes-do-tipo "despesa")
         =>
         '(
-          {:valor 8 :tipo "despesa"}
-          {:valor 32 :tipo "despesa"}
+          {:id 1 :valor 8M :tipo "despesa" :rotulos []}
+          {:id 3 :valor 32M :tipo "despesa" :rotulos []}
         )
     )
   )
