@@ -1,4 +1,5 @@
-(ns controle-financeiro.domain.transacao)
+(ns controle-financeiro.domain.transacao
+  (:require [clojure.string :refer [blank?]]))
 
 (defn eh-valida? [transacao]
   (and
@@ -9,6 +10,11 @@
     (or
       (= "despesa" (:tipo transacao))
       (= "receita" (:tipo transacao))
+    )
+    (or
+      (not (contains? transacao :rotulos))
+      (empty? (:rotulos transacao))
+      (not (some blank? (:rotulos transacao)))
     )
   )
 )
