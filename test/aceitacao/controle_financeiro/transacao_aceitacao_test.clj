@@ -74,4 +74,18 @@
       (:status response) => 422
     )
   )
+    
+  (fact "Rejeita uma transação com rótulos em branco"
+    :aceitacao
+    (let [response
+      (http/post
+        (endereco-para "/transacoes")
+        (conteudo-como-json
+          {:valor 64 :tipo "despesa" :rotulos [" " "curso" ""]}
+        )
+      )]
+      
+      (:status response) => 422
+    )
+  )
 )
