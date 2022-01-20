@@ -1,6 +1,5 @@
 (ns controle-financeiro.service.transacoes-service
   (:require [cheshire.core :as json]
-            [controle-financeiro.infra.db-persistence :as db]
             [controle-financeiro.domain.transacao :as transacao]
             [controle-financeiro.infra.db-postgres :as pg]))
 
@@ -32,7 +31,7 @@
       :transacoes
       (if (empty? filtros)
         (pg/transacoes)
-        (db/transacoes-com-filtro filtros)
+        (pg/transacoes-com-filtro filtros)
       )
     }
   )

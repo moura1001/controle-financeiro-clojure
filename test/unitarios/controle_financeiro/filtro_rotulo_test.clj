@@ -3,7 +3,7 @@
             [midje.sweet :refer :all]
             [ring.mock.request :as mock]
             [cheshire.core :as json]
-            [controle-financeiro.infra.db-persistence :as db]))
+            [controle-financeiro.infra.db-postgres :as db]))
   
 (def livro
   {:id 1 :valor 33.0M :tipo "despesa" :rotulos ["livro" "educação"]}
@@ -18,7 +18,7 @@
 )
 
 (def transacao-sem-rotulo
-  {:id 4 :valor 150.0M :tipo "receita"}
+  {:id 4 :valor 150.0M :tipo "receita" :rotulos []}
 )
 
 (def transacoes-aleatorias
@@ -30,7 +30,7 @@
     [
       (before :facts
         [
-          (db/limpar-colecao)
+          (db/limpar-base)
           (doseq [transacao transacoes-aleatorias]
             (db/registrar transacao)
           )
@@ -46,7 +46,7 @@
       (db/transacoes-com-filtro {:rotulos ""})
         => [transacao-sem-rotulo]
 
-      (after :facts (db/limpar-colecao))
+      (after :facts (db/limpar-base))
     ]
 
     (fact "Filtro por múltiplos rótulos"
