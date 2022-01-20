@@ -2,7 +2,7 @@
   (:require [midje.sweet :refer :all]
             [clj-http.client :as http]
             [controle-financeiro.auxiliares :refer :all]
-            [controle-financeiro.infra.db-persistence :as db]))
+            [controle-financeiro.infra.db-postgres :as db]))
 
 (def transacoes-aleatorias
   '(
@@ -19,7 +19,7 @@
     (before :facts
       [
         (iniciar-servidor porta-padrao)
-        (db/limpar-colecao)
+        (db/limpar-base)
       ]
     )
     (after :facts (parar-servidor))
@@ -50,7 +50,7 @@
           (db/registrar transacao)
         )
       )
-      (after :facts (db/limpar-colecao))
+      (after :facts (db/limpar-base))
     ]
     
     (fact "Existem 3 despesas" :aceitacao
