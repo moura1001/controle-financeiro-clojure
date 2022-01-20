@@ -1,6 +1,5 @@
 (ns controle-financeiro.db-test
   (:require [midje.sweet :refer :all]
-            [controle-financeiro.infra.db-persistence :refer :all]
             [controle-financeiro.infra.db-postgres :as pg]))
   
 (facts "Guarda uma transação na base de dados"
@@ -111,47 +110,47 @@
     [
       (before :facts
         [
-          (limpar-colecao)
+          (pg/limpar-base)
           (doseq [transacao transacoes-aleatorias]
-            (registrar transacao)
+            (pg/registrar transacao)
           )
         ]
       )
       
-      (after :facts (limpar-colecao))
+      (after :facts (pg/limpar-base))
     ]
     
     (fact "Encontra a transação com rótulo 'salário'"
-      (transacoes-com-filtro {:rotulos "salário"})
+      (pg/transacoes-com-filtro {:rotulos "salário"})
         =>
         '(
-          {:valor 3000.0M :tipo "receita" :rotulos ["salário"]}
+          {:id 2 :valor 3000.0M :tipo "receita" :rotulos ["salário"]}
         )
     )
     
     (fact "Encontra as 2 transações com rótulo 'educação'"
-      (transacoes-com-filtro {:rotulos ["educação"]})
+      (pg/transacoes-com-filtro {:rotulos ["educação"]})
         =>
         '(
-          {:valor 33.0M :tipo "despesa" :rotulos ["livro" "educação"]}
-          {:valor 88.0M :tipo "despesa" :rotulos ["curso" "educação"]}
+          {:id 1 :valor 33.0M :tipo "despesa" :rotulos ["livro" "educação"]}
+          {:id 4 :valor 88.0M :tipo "despesa" :rotulos ["curso" "educação"]}
         )
     )
     
     (fact "Encontra as 2 transações com rótulo 'livro' ou 'curso'"
-      (transacoes-com-filtro {:rotulos ["livro" "curso"]})
+      (pg/transacoes-com-filtro {:rotulos ["livro" "curso"]})
         =>
         '(
-          {:valor 33.0M :tipo "despesa" :rotulos ["livro" "educação"]}
-          {:valor 88.0M :tipo "despesa" :rotulos ["curso" "educação"]}
+          {:id 1 :valor 33.0M :tipo "despesa" :rotulos ["livro" "educação"]}
+          {:id 4 :valor 88.0M :tipo "despesa" :rotulos ["curso" "educação"]}
         )
     )
     
     (fact "Encontra a transação sem rótulo"
-      (transacoes-com-filtro {:rotulos ""})
+      (pg/transacoes-com-filtro {:rotulos ""})
         =>
         '(
-          {:valor 150.0M :tipo "receita"}
+          {:id 5 :valor 150.0M :tipo "receita" :rotulos []}
         )
     )
   )

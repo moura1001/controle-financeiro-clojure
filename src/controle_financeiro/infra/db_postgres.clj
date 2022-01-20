@@ -1,6 +1,7 @@
 (ns controle-financeiro.infra.db-postgres
   (:require [clojure.java.jdbc :as sql]
-            [clj-postgresql.core :as pg]))
+            [clj-postgresql.core :as pg]
+            [clojure.string :refer [blank?]]))
   
 (def db
   (pg/spec
@@ -88,5 +89,34 @@
   )
 )
 
-(declare transacoes-com-filtro)
+(defn transacoes-com-filtro [filtros]
+  (let
+    [
+      rotulos
+      (->>
+        (:rotulos filtros)
+        (conj [])
+        (flatten)
+        (set)
+      )
+    ]
+    
+    (if-not (every? blank? rotulos)
+      
+      (sql/query
+        db
+        ["SELECT * FROM transacoes
+          WHERE rotulos && ?" rotulos
+        ]
+      )
+      
+      (sql/query
+        db
+        ["SELECT * FROM transacoes
+          WHERE rotulos = '{}'"
+        ]
+      )
+    )
+  )
+)
   
