@@ -47,6 +47,10 @@
   (eh-valida? {:valor 512 :tipo "investimento"}) => false
 )
 
+(fact "Uma transação com rótulos em branco não é válida"
+  (eh-valida? {:valor 32 :tipo "despesa" :rotulos [" " "curso" ""]}) => false
+)
+
 (fact "Uma transação com valor numérico positivo e com tipo conhecido é válida"
   (eh-valida? {:valor 64 :tipo "despesa"}) => true
 )
