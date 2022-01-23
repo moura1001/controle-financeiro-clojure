@@ -1,7 +1,8 @@
 (ns controle-financeiro.infra.db-postgres
   (:require [clojure.java.jdbc :as sql]
             [clj-postgresql.core :as pg]
-            [clojure.string :refer [blank?]]))
+            [clojure.string :refer [blank?]]
+            [controle-financeiro.domain.transacao :refer [rotulos-organizados]]))
   
 (def db
   (pg/spec
@@ -43,7 +44,7 @@
         {
           :valor (:valor transacao)
           :tipo (:tipo transacao)
-          :rotulos (:rotulos transacao)
+          :rotulos (rotulos-organizados transacao)
         }
 
         {
@@ -92,13 +93,7 @@
 (defn transacoes-com-filtro [filtros]
   (let
     [
-      rotulos
-      (->>
-        (:rotulos filtros)
-        (conj [])
-        (flatten)
-        (set)
-      )
+      rotulos (rotulos-organizados filtros)
     ]
     
     (if-not (every? blank? rotulos)
