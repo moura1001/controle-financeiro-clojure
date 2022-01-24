@@ -114,4 +114,20 @@
     )
   )
 )
+
+(defn remover-transacao [id]
+  (->
+    (sql/query
+      db
+      ["WITH deleted AS
+        (DELETE FROM transacoes
+          WHERE id = ? RETURNING *)
+        SELECT COUNT(*) FROM deleted" id
+      ]
+    )
+    
+    first
+    :count
+  )
+)
   
