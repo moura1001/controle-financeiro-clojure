@@ -44,3 +44,13 @@
 (defn get-receitas []
   (como-json {:transacoes (pg/transacoes-do-tipo "receita")})
 )
+
+(defn remove-transacao [id]
+  (como-json
+    {}
+    (if (zero? (pg/remover-transacao id))
+      404
+      200    
+    )
+  )
+)
