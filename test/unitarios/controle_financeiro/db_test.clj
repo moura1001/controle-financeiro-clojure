@@ -155,4 +155,59 @@
     )
   )
 )
+
+(facts "Remove uma transação"
+  (def transacoes-aleatorias
+    '(
+      {:valor 2 :tipo "despesa"}
+      {:valor 4 :tipo "receita"}
+      {:valor 8 :tipo "despesa"}
+    )
+  )
+  
+  (def transacoes-restantes
+    '(
+      {:id 1 :valor 2M :tipo "despesa" :rotulos []}
+      {:id 3 :valor 8M :tipo "despesa" :rotulos []}
+    )
+  )
+  
+  (fact "A base começa com 3 transações"
+    (pg/limpar-base)
+    (doseq [transacao transacoes-aleatorias]
+      (pg/registrar transacao)
+    )
+    
+    (count (pg/transacoes)) => 3
+  )
+    
+  (fact "Remove a transação de id 2"
+    (pg/remover-transacao 2) => 1
+              
+    (let [transacoes (pg/transacoes)]
+      
+      (count transacoes) => 2
+      
+      transacoes => transacoes-restantes
+    )
+  )
+    
+  (fact "Não remove uma transação que não existe"
+    (against-background
+      [
+        (after :facts (pg/limpar-base))
+      ]
+        
+    )
+    
+    (pg/remover-transacao 8) => 0
+              
+    (let [transacoes (pg/transacoes)]
+        
+      (count transacoes) => 2
+        
+      transacoes => transacoes-restantes
+    )
+  )
+)
   

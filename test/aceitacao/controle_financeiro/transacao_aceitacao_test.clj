@@ -101,6 +101,7 @@
 )
 
 (facts "Remove uma transação com determinado id"
+  :aceitacao
   (against-background
     [
       (before :facts
@@ -112,7 +113,7 @@
     ]    
   )
     
-  (fact "A base começa com 5 transações" :aceitacao-remove
+  (fact "A base começa com 5 transações"
     (db/limpar-base)
     (doseq [transacao transacoes-aleatorias]
       (db/registrar transacao)
@@ -127,7 +128,7 @@
     ) => 5
   )
   
-  (fact "Remove a transação de id 1" :aceitacao-remove
+  (fact "Remove a transação de id 1"
     (let
       [
         response (http/delete (endereco-para "/transacoes/1"))
@@ -146,7 +147,6 @@
   )
   
   (fact "Não remove uma transação que não existe na base"
-    :aceitacao-removes
     
     (against-background
       [
