@@ -210,4 +210,58 @@
     )
   )
 )
+
+(facts "Altera uma transação"
+  (def transacoes-aleatorias
+    '(
+      {:valor 9M :tipo "despesa"}
+      {:valor 99M :tipo "receita"}
+      {:valor 7M :tipo "despesa"}
+    )
+  )
+  
+  (def transacoes-alteradas
+    '(
+      {:id 1 :valor 9M :tipo "despesa" :rotulos []}
+      {:id 2 :valor 99M :tipo "receita" :rotulos []}
+      {:id 3 :valor 999M :tipo "receita" :rotulos []}
+    )
+  )
+  
+  (fact "Altera a transação de id 3"
+    (pg/limpar-base)
+    (doseq [transacao transacoes-aleatorias]
+      (pg/registrar transacao)
+    )
+    (pg/alterar-transacao
+      3
+      {:valor 999M :tipo "receita"}
+    ) => {:id 3 :valor 999M :tipo "receita" :rotulos []}
+              
+    (let [transacoes (pg/transacoes)]
+      
+      (count transacoes) => 3
+      
+      transacoes => transacoes-alteradas
+    )
+  )
+    
+  (fact "Não altera uma transação que não existe"
+    (against-background
+      [
+        (after :facts (pg/limpar-base))
+      ]
+        
+    )
+    
+    (pg/alterar-transacao 5 {:valor 8M :tipo "despesa"}) => nil
+              
+    (let [transacoes (pg/transacoes)]
+        
+      (count transacoes) => 3
+        
+        transacoes => transacoes-alteradas
+    )
+  )
+)
   

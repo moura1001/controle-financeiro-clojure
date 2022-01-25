@@ -178,7 +178,7 @@
 )
 
 (facts "Altera uma transação com determinado id"
-  :aceitacao-alteracao
+  :aceitacao
 
   (def transacoes-alteradas
     '(
