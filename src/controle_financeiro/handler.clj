@@ -13,8 +13,13 @@
   (GET "/transacoes" {filtros :params} (transacoes/get-transacoes filtros))
   (GET "/despesas" [] (transacoes/get-despesas))
   (GET "/receitas" [] (transacoes/get-receitas))
-  (DELETE "/transacoes/:id" [id :<< as-int]
-    (transacoes/remove-transacao id)
+  (context "/transacoes/:id" [id :<< as-int]
+    (DELETE "/" []
+      (transacoes/remove-transacao id)
+    )
+    (PUT "/" requisicao
+      (transacoes/update-transacao id requisicao)
+    )
   )
   (route/not-found "Not Found"))
 

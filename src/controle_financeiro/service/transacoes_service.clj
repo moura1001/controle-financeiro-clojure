@@ -54,3 +54,21 @@
     )
   )
 )
+
+(defn update-transacao [id requisicao]
+  (if (transacao/eh-valida? (:body requisicao))
+    (let
+      [
+        transacao-alterada (pg/alterar-transacao id (:body requisicao))
+      ]
+      
+      (if (not (empty? transacao-alterada))
+        (como-json transacao-alterada)
+
+        (como-json {} 404)
+      )
+    )
+
+    (como-json {:mensagem "Requisição inválida"} 422)
+  )
+)
