@@ -176,3 +176,84 @@
     )
   )
 )
+
+(facts "Altera uma transação com determinado id"
+  :aceitacao-alteracao
+
+  (def transacoes-alteradas
+    '(
+      {:id 1 :valor 33.0 :tipo "despesa" :rotulos ["livro" "educação"]}
+      {:id 2 :valor 2700.0 :tipo "receita" :rotulos ["salário"]}
+      {:id 3 :valor 29.0 :tipo "despesa" :rotulos ["entretenimento" "jogo"]}
+      {:id 4 :valor 88.0 :tipo "despesa" :rotulos ["curso" "educação"]}
+      {:id 5 :valor 200.0 :tipo "receita" :rotulos ["venda"]}
+    )
+  )
+
+  (fact "Altera a transação de id 5"
+    (against-background
+      [
+        (before :facts
+          [
+            (iniciar-servidor porta-padrao)
+            (db/limpar-base)
+            (doseq [transacao transacoes-aleatorias]
+              (http/post
+                (endereco-para "/transacoes")
+                (conteudo-como-json transacao)
+              )
+            )
+          ]
+        )
+      ]    
+    )
+        
+    (let [response
+      (http/put
+        (endereco-para "/transacoes/5")
+        (conteudo-como-json
+          {:valor 200.0 :tipo "receita" :rotulos "venda"}
+        )
+      )]
+      
+      (:status response) => 200
+
+      (:transacoes
+        (parse-string-producing-keywords-as-keys
+          (conteudo "/transacoes")
+        )
+      ) => transacoes-alteradas
+    )
+  )
+  
+  (fact "Não altera uma transação que não existe na base"
+    
+    (against-background
+      [
+        (after :facts
+          [
+            (db/limpar-base)
+            (parar-servidor)
+          ]
+        )
+      ]    
+    )
+    
+    (let [response
+      (http/put
+        (endereco-para "/transacoes/8")
+        (conteudo-como-json
+          {:valor 80.0 :tipo "despesa"}
+        )
+      )]
+      
+      (:status response) => 404
+
+      (:transacoes
+        (parse-string-producing-keywords-as-keys
+          (conteudo "/transacoes")
+        )
+      ) => transacoes-alteradas
+    )
+  )
+)
