@@ -130,4 +130,26 @@
     :count
   )
 )
+
+(defn alterar-transacao [id nova-transacao]
+  (sql/update!
+    db
+    :transacoes
+    (if (contains? nova-transacao :rotulos)
+      {
+        :valor (:valor nova-transacao)
+        :tipo (:tipo nova-transacao)
+        :rotulos (rotulos-organizados nova-transacao)
+      }
+
+      {
+        :valor (:valor nova-transacao)
+        :tipo (:tipo nova-transacao)
+      }
+    )
+
+    ["id = ?" id]
+    {:return-keys ["*"]}
+  )
+)
   
